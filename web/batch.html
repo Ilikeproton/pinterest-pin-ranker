@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PinPulse | Batch Detail</title>
+  <link href="/static/style.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <span class="ambient-orb ambient-orb--warm"></span>
+    <span class="ambient-orb ambient-orb--teal"></span>
+    <span class="ambient-orb ambient-orb--sand"></span>
+  </div>
+
+  <main class="app-shell app-shell--detail">
+    <section class="hero-card hero-card--detail">
+      <div class="hero-copy">
+        <a href="/" class="inline-link" data-i18n="detail.back">Back to Overview</a>
+        <p class="eyebrow" data-i18n="detail.hero.eyebrow">Batch Detail</p>
+        <h1 id="batchTitle">Batch</h1>
+        <p id="batchMeta" class="hero-text hero-text--compact"></p>
+      </div>
+      <div class="hero-side">
+        <span id="batchRunningBadge" class="status-chip status-chip--idle" data-i18n="detail.stopped">Stopped</span>
+        <div class="button-cluster button-cluster--end">
+          <button id="batchStartBtn" class="button button--accent" type="button" data-i18n="detail.start">Start</button>
+          <button id="batchStopBtn" class="button button--ghost button--danger" type="button" data-i18n="detail.stop">Stop</button>
+          <button id="batchDeleteBtn" class="button button--danger" type="button" data-i18n="detail.delete">Delete</button>
+          <button id="reloadPinsBtn" class="button button--ghost" type="button" data-i18n="detail.refresh">Refresh</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="surface surface--elevated surface--detail-controls">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="detail.sections.filters.eyebrow">Filters</p>
+          <h2 data-i18n="detail.sections.filters.title">Browse and Rules</h2>
+        </div>
+        <p class="section-note" data-i18n="detail.sections.filters.note">
+          Switch view mode, update thresholds, and apply depth changes to this batch immediately.
+        </p>
+      </div>
+
+      <div class="form-grid form-grid--detail">
+        <label class="field">
+          <span class="field-label" data-i18n="detail.filters.viewMode.label">View Mode</span>
+          <select id="viewMode" class="input">
+            <option value="included" selected data-i18n="detail.filters.viewMode.included">Saved Only (wall)</option>
+            <option value="all" data-i18n="detail.filters.viewMode.all">All Links (debug)</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span class="field-label" data-i18n="detail.filters.limit.label">Load Count</span>
+          <input id="limitCount" class="input" type="number" min="50" max="2000" value="800" />
+        </label>
+
+        <label class="field">
+          <span class="field-label" data-i18n="detail.filters.threshold.label">Threshold</span>
+          <input id="batchThresholdInput" class="input" type="number" min="1" value="2" />
+        </label>
+
+        <label class="field">
+          <span class="field-label" data-i18n="detail.filters.maxDepth.label">Max Depth</span>
+          <input id="batchMaxDepthInput" class="input" type="number" min="1" max="20" value="3" />
+        </label>
+
+        <div class="field field--actions field--wide">
+          <button id="saveThresholdBtn" class="button button--dark" type="button" data-i18n="detail.filters.save">Update Rules</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-strip">
+      <div>
+        <p class="eyebrow" data-i18n="detail.sections.results.eyebrow">Pinned Results</p>
+        <h2 data-i18n="detail.sections.results.title">Image Wall</h2>
+      </div>
+      <p class="section-note" data-i18n="detail.sections.results.note">
+        Keep crawling links, evaluate heart counts, and retain qualified assets locally.
+      </p>
+    </section>
+
+    <div id="pinWall" class="card-grid card-grid--pins"></div>
+    <div id="pinEmptyTip" class="surface surface--empty is-hidden" data-i18n="detail.empty">No data yet.</div>
+  </main>
+
+  <template id="pinCardTpl">
+    <article class="pin-card">
+      <a class="pin-media" target="_blank" rel="noopener noreferrer" data-external="1">
+        <img class="pin-image" alt="pin" loading="lazy" />
+        <div class="pin-heart-pill"></div>
+        <div class="pin-placeholder is-hidden" data-i18n="detail.pin.placeholder">Link only</div>
+      </a>
+
+      <div class="pin-body">
+        <div class="pin-head">
+          <h3 class="pin-title"></h3>
+        </div>
+        <p class="pin-status"></p>
+        <div class="pin-actions">
+          <a class="button button--ghost pin-link" target="_blank" rel="noopener noreferrer" data-external="1" data-i18n="detail.pin.link">View Original Link</a>
+          <button class="button button--ghost pin-locate" type="button" data-i18n="detail.pin.locate">Locate</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="/static/i18n.js"></script>
+  <script src="/static/common.js"></script>
+  <script src="/static/batch.js"></script>
+</body>
+</html>

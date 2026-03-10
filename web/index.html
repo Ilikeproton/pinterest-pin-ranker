@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PinPulse | Desktop Pinterest Workspace</title>
+  <link href="/static/style.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <span class="ambient-orb ambient-orb--warm"></span>
+    <span class="ambient-orb ambient-orb--teal"></span>
+    <span class="ambient-orb ambient-orb--sand"></span>
+  </div>
+
+  <main class="app-shell app-shell--dashboard">
+    <section class="hero-card">
+      <div class="hero-copy">
+        <p class="eyebrow" data-i18n="dashboard.hero.eyebrow">Desktop Pinterest Workspace</p>
+        <h1>PinPulse</h1>
+        <p class="hero-text" data-i18n="dashboard.hero.copy">
+          Start from a single Pinterest Pin, keep discovering related links, collect heart counts, and save qualified images into a local workspace.
+        </p>
+        <div class="pill-row">
+          <span class="meta-pill" data-i18n="dashboard.pill.localFirst">Local-first</span>
+          <span class="meta-pill" data-i18n="dashboard.pill.sqlite">SQLite</span>
+          <span class="meta-pill" data-i18n="dashboard.pill.assets">Pinned Assets</span>
+        </div>
+      </div>
+      <div class="hero-side">
+        <span id="globalStatus" class="status-chip status-chip--idle" data-i18n="dashboard.global.stopped">Global Stopped</span>
+        <div class="button-cluster button-cluster--end">
+          <button id="globalStartBtn" class="button button--accent" type="button" data-i18n="dashboard.global.start">Start All</button>
+          <button id="globalStopBtn" class="button button--ghost button--danger" type="button" data-i18n="dashboard.global.stop">Stop All</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="surface surface--elevated">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow" data-i18n="dashboard.sections.settings.eyebrow">Workspace</p>
+            <h2 data-i18n="dashboard.sections.settings.title">System Settings</h2>
+          </div>
+          <p class="section-note" data-i18n="dashboard.sections.settings.note">
+            Control global concurrency, default image retention, and task archiving.
+          </p>
+        </div>
+
+        <div class="form-grid">
+          <label class="field">
+            <span class="field-label" data-i18n="dashboard.settings.concurrency.label">Concurrent Workers</span>
+            <input id="concurrencyInput" class="input" type="number" min="1" max="32" value="3" />
+            <span class="field-help" data-i18n="dashboard.settings.concurrency.help">Recommended range: 1-8.</span>
+          </label>
+
+          <label class="field">
+            <span class="field-label" data-i18n="dashboard.settings.defaultImages.label">Default Saved Images</span>
+            <input id="defaultBatchMaxImagesInput" class="input" type="number" min="1" max="5000" value="100" />
+            <span class="field-help" data-i18n="dashboard.settings.defaultImages.help">Default image cap for each batch.</span>
+          </label>
+
+          <label class="field field--wide">
+            <span class="field-label" data-i18n="dashboard.settings.archiveLimit.label">Archive Limit</span>
+            <input id="archiveLimitInput" class="input" type="number" min="100" max="50000" value="10000" />
+            <span class="field-help" data-i18n="dashboard.settings.archiveLimit.help">
+              Archive completed tasks for stopped batches to reduce homepage query load.
+            </span>
+          </label>
+        </div>
+
+        <div class="button-cluster">
+          <button id="saveSettingsBtn" class="button button--dark" type="button" data-i18n="dashboard.settings.save">Save Settings</button>
+          <button id="refreshBtn" class="button button--ghost" type="button" data-i18n="dashboard.settings.refresh">Refresh Dashboard</button>
+          <button id="archiveDoneBtn" class="button button--ghost" type="button" data-i18n="dashboard.settings.archiveDone">Archive Completed Tasks</button>
+        </div>
+
+        <div id="runtimeStats" class="stats-grid"></div>
+      </article>
+
+      <article class="surface surface--warm">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow" data-i18n="dashboard.sections.newBatch.eyebrow">New Batch</p>
+            <h2 data-i18n="dashboard.sections.newBatch.title">Create Batch</h2>
+          </div>
+          <p class="section-note" data-i18n="dashboard.sections.newBatch.note">
+            Provide a seed pin and rule set, then push it into the task queue immediately.
+          </p>
+        </div>
+
+        <form id="createBatchForm" class="form-grid">
+          <label class="field field--wide">
+            <span class="field-label" data-i18n="dashboard.form.name.label">Batch Name</span>
+            <input
+              id="batchName"
+              class="input"
+              type="text"
+              data-i18n-placeholder="dashboard.form.name.placeholder"
+              placeholder="For example: City Art 01"
+            />
+          </label>
+
+          <label class="field field--wide">
+            <span class="field-label" data-i18n="dashboard.form.seed.label">Seed Link</span>
+            <input
+              id="seedUrl"
+              class="input"
+              type="url"
+              placeholder="https://www.pinterest.com/pin/563018698999153/"
+              required
+            />
+          </label>
+
+          <label class="field">
+            <span class="field-label" data-i18n="dashboard.form.threshold.label">Heart Threshold</span>
+            <input id="threshold" class="input" type="number" min="1" value="2" />
+          </label>
+
+          <label class="field">
+            <span class="field-label" data-i18n="dashboard.form.maxImages.label">Max Saved Images</span>
+            <input id="maxImages" class="input" type="number" min="1" max="5000" value="100" />
+          </label>
+
+          <label class="field">
+            <span class="field-label" data-i18n="dashboard.form.maxDepth.label">Max Depth</span>
+            <input id="maxDepth" class="input" type="number" min="1" max="20" value="3" />
+          </label>
+
+          <div class="field field--wide field--actions">
+            <button class="button button--accent button--stretch" type="submit" data-i18n="dashboard.form.submit">Create Batch</button>
+          </div>
+        </form>
+      </article>
+    </section>
+
+    <section class="section-strip">
+      <div>
+        <p class="eyebrow" data-i18n="dashboard.sections.library.eyebrow">Live Library</p>
+        <h2 data-i18n="dashboard.sections.library.title">Batch Wall</h2>
+      </div>
+      <p class="section-note" data-i18n="dashboard.sections.library.note">
+        Watch covers, discovered links, scanned counts, and save progress in real time.
+      </p>
+    </section>
+
+    <div id="batchWall" class="card-grid card-grid--batches"></div>
+    <div id="emptyTip" class="surface surface--empty is-hidden" data-i18n="dashboard.empty">
+      No batches yet. Create one to get started.
+    </div>
+  </main>
+
+  <template id="batchCardTpl">
+    <article class="batch-card">
+      <div class="batch-cover">
+        <img class="cover-image" alt="cover" loading="lazy" />
+        <div class="cover-placeholder is-hidden" data-i18n="dashboard.batch.coverPlaceholder">Waiting for cover</div>
+        <div class="cover-glow"></div>
+        <div class="cover-heart-pill">Top 0</div>
+      </div>
+
+      <div class="batch-body">
+        <div class="batch-head">
+          <div class="batch-head-copy">
+            <h3 class="batch-name"></h3>
+            <p class="batch-seed"></p>
+          </div>
+          <span class="batch-running-note is-stopped" data-i18n="dashboard.batch.card.stopped">Stopped</span>
+        </div>
+
+        <div class="batch-progress">
+          <div class="batch-progress-copy">0 / 0 saved</div>
+          <div class="batch-progress-track"><span class="batch-progress-fill"></span></div>
+        </div>
+
+        <div class="mini-stats"></div>
+
+        <div class="card-actions">
+          <button class="button button--accent btn-toggle-run" type="button" data-i18n="dashboard.batch.start">Start Batch</button>
+          <button class="button button--ghost btn-open" type="button" data-i18n="dashboard.batch.open">Open Detail</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="/static/i18n.js"></script>
+  <script src="/static/common.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

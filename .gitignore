@@ -1,0 +1,26 @@
+﻿# agent
+.prompt/
+
+# build artifacts
+*.bat
+*.exe
+*.dll
+*.test
+*.out
+bin/**
+bin/
+!bin/.gitkeep
+
+# generated frontend
+web-dist/**
+!web-dist/.gitkeep
+
+# local runtime data
+data/**
+!data/.gitkeep
+
+# local backups
+backup/
+
+# logs
+*.log
