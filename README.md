@@ -8,7 +8,6 @@ PinPulse is a desktop-first Pinterest Pin crawler and local image workspace. It 
 
 - [Chinese README](./README.zh-CN.md)
 - [License](./LICENSE)
-- [Windows Build Script](./build-windows.bat)
 
 ## Preview
 
