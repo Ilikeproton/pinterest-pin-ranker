@@ -128,4 +128,4 @@ If you need custom software, automation workflows, AI tools, or a desktop/data c
 
 ## Contact Email
 
-<img src="email.png" width="270">
+<img src="e.png" width="270">

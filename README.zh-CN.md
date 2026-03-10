@@ -128,4 +128,4 @@ PinPulse 支持以下网络模式：
 
 ## 联系邮箱
 
-<img src="email.png" width="270">
+<img src="e.png" width="270">
